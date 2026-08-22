@@ -2,16 +2,14 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Voodo - Attendance</title>
+  <title>Voodo - Leave Requests</title>
 
   <link rel="stylesheet" href="/css/style.css">
 
   <style>
-
     .table-container {
       overflow-x: auto;
     }
@@ -41,33 +39,50 @@
       font-weight: 600;
     }
 
-    .present {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .absent {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .half-day {
+    .pending {
       background: #fef3c7;
       color: #92400e;
     }
 
-    .leave {
-      background: #dbeafe;
-      color: #1e40af;
+    .approved {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    .actions button {
+      border: none;
+      border-radius: 6px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .approve {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .reject {
+      background: #fee2e2;
+      color: #991b1b;
     }
 
     .empty-state {
       color: #6b7280;
       padding: 20px;
     }
-
   </style>
-
 </head>
 
 <body>
@@ -98,7 +113,7 @@
         Payroll
       </a>
 
-      <a href="/admin/leaves">
+      <a href="/admin/leaves" class="active">
         Leave Requests
       </a>
 
@@ -121,10 +136,10 @@
 
       <div>
 
-        <h1>Attendance</h1>
+        <h1>Leave Requests</h1>
 
         <p>
-          Monitor employee attendance
+          Review and manage employee leave applications
         </p>
 
       </div>
@@ -136,7 +151,7 @@
 
       <div class="panel-header">
 
-        <h2>Attendance Records</h2>
+        <h2>Employee Leave Requests</h2>
 
       </div>
 
@@ -148,14 +163,13 @@
           <thead>
 
             <tr>
-
               <th>Employee</th>
               <th>Department</th>
-              <th>Date</th>
-              <th>Check In</th>
-              <th>Check Out</th>
+              <th>Type</th>
+              <th>Dates</th>
+              <th>Reason</th>
               <th>Status</th>
-
+              <th>Action</th>
             </tr>
 
           </thead>
@@ -163,75 +177,109 @@
 
           <tbody>
 
-            <% if (attendance.length === 0) { %>
+            <% if (leaves.length === 0) { %>
 
               <tr>
-
-                <td colspan="6" class="empty-state">
-                  No attendance records available.
+                <td colspan="7" class="empty-state">
+                  No leave requests found.
                 </td>
-
               </tr>
 
             <% } %>
 
 
-            <% attendance.forEach(record => { %>
+            <% leaves.forEach(leave => { %>
 
               <tr>
 
                 <td>
 
                   <strong>
-                    <%= record.employee.name %>
+                    <%= leave.employee.name %>
                   </strong>
 
                   <br>
 
                   <small>
-                    <%= record.employee.employeeId %>
+                    <%= leave.employee.employeeId %>
                   </small>
 
                 </td>
 
 
                 <td>
-                  <%= record.employee.department || "-" %>
+                  <%= leave.employee.department || "-" %>
                 </td>
 
 
                 <td>
-                  <%= new Date(record.date).toLocaleDateString("en-IN") %>
-                </td>
-
-
-                <td>
-
-                  <%= record.checkIn
-                    ? new Date(record.checkIn).toLocaleTimeString()
-                    : "-"
-                  %>
-
+                  <%= leave.type %>
                 </td>
 
 
                 <td>
 
-                  <%= record.checkOut
-                    ? new Date(record.checkOut).toLocaleTimeString()
-                    : "-"
-                  %>
+                  <%= new Date(leave.startDate)
+                    .toLocaleDateString("en-IN") %>
+
+                  -
+
+                  <%= new Date(leave.endDate)
+                    .toLocaleDateString("en-IN") %>
 
                 </td>
 
 
                 <td>
+                  <%= leave.reason %>
+                </td>
 
-                  <span
-                    class="status <%= record.status.toLowerCase().replace(' ', '-') %>"
-                  >
-                    <%= record.status %>
+
+                <td>
+
+                  <span class="status <%= leave.status.toLowerCase() %>">
+                    <%= leave.status %>
                   </span>
+
+                </td>
+
+
+                <td>
+
+                  <% if (leave.status === "Pending") { %>
+
+                    <div class="actions">
+
+                      <form
+                        action="/admin/leaves/<%= leave._id %>/approve"
+                        method="POST"
+                      >
+
+                        <button class="approve">
+                          Approve
+                        </button>
+
+                      </form>
+
+
+                      <form
+                        action="/admin/leaves/<%= leave._id %>/reject"
+                        method="POST"
+                      >
+
+                        <button class="reject">
+                          Reject
+                        </button>
+
+                      </form>
+
+                    </div>
+
+                  <% } else { %>
+
+                    -
+
+                  <% } %>
 
                 </td>
 

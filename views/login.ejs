@@ -1,38 +1,268 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Voodo - Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #2b2f36;
+      color: #1f2937;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .brand h1 {
+      font-size: 34px;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    .brand p {
+      color: #d1d5db;
+      font-size: 14px;
+    }
+
+    .login-card {
+      background: #e8eaed;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      padding: 32px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
+    }
+
+    .login-card h2 {
+      font-size: 24px;
+      margin-bottom: 7px;
+      color: #111827;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      padding: 11px 13px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 7px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .form-group input::placeholder {
+      color: #9ca3af;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .login-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .signup-text {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .signup-text a {
+      color: #2563eb;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .signup-text a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    @media (max-width: 480px) {
+
+      .login-card {
+        padding: 25px 20px;
+      }
+
+      .brand h1 {
+        font-size: 30px;
+      }
+
+    }
+  </style>
+
 </head>
 
 <body>
-  <h1>Voodo</h1>
-  <h2>Login</h2>
 
-  <% if (error) { %>
-    <p><%= error %></p>
-  <% } %>
+  <div class="login-container">
 
-  <form action="/login" method="POST">
-    <input
-      type="email"
-      name="email"
-      placeholder="Email"
-      required
-    />
+    <div class="brand">
 
-    <input
-      type="password"
-      name="password"
-      placeholder="Password"
-      required
-    />
+      <h1>Voodo</h1>
 
-    <button type="submit">Login</button>
-  </form>
+      <p>Human Resource Management System</p>
 
-  <p>
-    Don't have an account?
-    <a href="/signup">Create account</a>
-  </p>
+    </div>
+
+
+    <div class="login-card">
+
+      <h2>Welcome back</h2>
+
+      <p class="subtitle">
+        Sign in to your Voodo account
+      </p>
+
+
+      <% if (error) { %>
+
+        <div class="error">
+          <%= error %>
+        </div>
+
+      <% } %>
+
+
+      <form action="/login" method="POST">
+
+        <div class="form-group">
+
+          <label for="email">
+            Email
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="password">
+            Password
+          </label>
+
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          >
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="login-btn"
+        >
+          Sign In
+        </button>
+
+      </form>
+
+
+      <p class="signup-text">
+
+        Don't have an account?
+
+        <a href="/signup">
+          Create account
+        </a>
+
+      </p>
+
+    </div>
+
+
+    <div class="footer">
+      Voodo HRMS
+    </div>
+
+  </div>
+
 </body>
+
 </html>

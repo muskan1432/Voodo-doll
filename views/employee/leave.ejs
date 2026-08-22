@@ -110,6 +110,19 @@
       color: #6b7280;
       font-size: 13px;
     }
+
+    .admin-comment {
+      display: block;
+      max-width: 220px;
+      color: #374151;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .no-comment {
+      color: #9ca3af;
+    }
+
   </style>
 
 </head>
@@ -269,6 +282,7 @@
               <th>To</th>
               <th>Reason</th>
               <th>Status</th>
+              <th>Admin Comment</th>
             </tr>
 
           </thead>
@@ -279,7 +293,7 @@
             <% if (leaves.length === 0) { %>
 
               <tr>
-                <td colspan="5">
+                <td colspan="6">
                   No leave requests yet.
                 </td>
               </tr>
@@ -307,13 +321,31 @@
                   <%= leave.reason %>
                 </td>
 
-                <td>
+              <td>
 
-                  <span class="status <%= leave.status.toLowerCase() %>">
-                    <%= leave.status %>
+                <span class="status <%= leave.status.toLowerCase() %>">
+                  <%= leave.status %>
+                </span>
+
+              </td>
+
+              <td>
+
+                <% if (leave.adminComment) { %>
+
+                  <span class="admin-comment">
+                    <%= leave.adminComment %>
                   </span>
 
-                </td>
+                <% } else { %>
+
+                  <span class="no-comment">
+                    —
+                  </span>
+
+                <% } %>
+
+              </td>
 
               </tr>
 

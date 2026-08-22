@@ -9,15 +9,12 @@ router.get("/", requireLogin, async (req, res) => {
     const records = await Attendance.find({
       employee: req.session.user.id,
     }).sort({ date: -1 });
-
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
     let todayRecord = await Attendance.findOne({
       employee: req.session.user.id,
       date: today,
     });
-
     res.render("employee/attendance", {
       records,
       todayRecord,
@@ -28,20 +25,18 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 
+
 router.post("/check-in", requireLogin, async (req, res) => {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
     const existing = await Attendance.findOne({
       employee: req.session.user.id,
       date: today,
     });
-
     if (existing && existing.checkIn) {
       return res.redirect("/employee/attendance");
     }
-
     if (existing) {
       existing.checkIn = new Date();
       existing.status = "Present";
@@ -54,7 +49,6 @@ router.post("/check-in", requireLogin, async (req, res) => {
         status: "Present",
       });
     }
-
     res.redirect("/employee/attendance");
   } catch (error) {
     console.error(error);
@@ -62,24 +56,20 @@ router.post("/check-in", requireLogin, async (req, res) => {
   }
 });
 
+
 router.post("/check-out", requireLogin, async (req, res) => {
   try {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
     const record = await Attendance.findOne({
       employee: req.session.user.id,
       date: today,
     });
-
     if (!record || !record.checkIn) {
       return res.redirect("/employee/attendance");
     }
-
     record.checkOut = new Date();
-
     await record.save();
-
     res.redirect("/employee/attendance");
   } catch (error) {
     console.error(error);

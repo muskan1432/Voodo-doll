@@ -45,6 +45,53 @@
       color: #6b7280;
       margin-bottom: 20px;
     }
+
+    .search-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .search-form input {
+      flex: 1;
+      max-width: 500px;
+      padding: 11px 13px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .search-form input:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    .search-form button {
+      padding: 11px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #2563eb;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .search-form button:hover {
+      background: #1d4ed8;
+    }
+
+    .clear-search {
+      display: flex;
+      align-items: center;
+      color: #6b7280;
+      font-size: 14px;
+      padding: 0 5px;
+    }
+
+    .clear-search:hover {
+      color: #2563eb;
+    }
   </style>
 </head>
 
@@ -120,6 +167,33 @@
           <%= employees.length %> employee(s)
         </p>
 
+        <form
+          action="/admin/employees"
+          method="GET"
+          class="search-form"
+        >
+
+          <input
+            type="text"
+            name="search"
+            value="<%= search || '' %>"
+            placeholder="Search by name, employee ID or email..."
+          >
+
+          <button type="submit">
+            Search
+          </button>
+
+          <% if (search) { %>
+
+            <a href="/admin/employees" class="clear-search">
+              Clear
+            </a>
+
+          <% } %>
+
+        </form>
+
       </div>
 
 
@@ -148,7 +222,18 @@
               <tr>
 
                 <td colspan="6" class="empty-state">
-                  No employees registered yet.
+
+                  <% if (search) { %>
+
+                    No employees found for
+                    "<%= search %>".
+
+                  <% } else { %>
+
+                    No employees registered yet.
+
+                  <% } %>
+
                 </td>
 
               </tr>

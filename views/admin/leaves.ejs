@@ -82,6 +82,42 @@
       color: #6b7280;
       padding: 20px;
     }
+
+    .leave-action {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 180px;
+    }
+
+    .leave-action form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .leave-action textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      resize: vertical;
+    }
+
+    .leave-action textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+    }
+
+    .admin-comment {
+      display: block;
+      margin-top: 7px;
+      color: #6b7280;
+      max-width: 180px;
+    }
+
   </style>
 </head>
 
@@ -246,40 +282,66 @@
 
                 <td>
 
-                  <% if (leave.status === "Pending") { %>
+                 <% if (leave.status === "Pending") { %>
 
-                    <div class="actions">
+                  <div class="leave-action">
 
-                      <form
-                        action="/admin/leaves/<%= leave._id %>/approve"
-                        method="POST"
-                      >
+                    <form
+                      action="/admin/leaves/<%= leave._id %>/approve"
+                      method="POST"
+                    >
 
-                        <button class="approve">
-                          Approve
-                        </button>
+                      <textarea
+                        name="adminComment"
+                        placeholder="Add admin comment..."
+                        rows="2"
+                      ></textarea>
 
-                      </form>
+                      <button class="approve">
+                        Approve
+                      </button>
+
+                    </form>
 
 
-                      <form
-                        action="/admin/leaves/<%= leave._id %>/reject"
-                        method="POST"
-                      >
+                    <form
+                      action="/admin/leaves/<%= leave._id %>/reject"
+                      method="POST"
+                    >
 
-                        <button class="reject">
-                          Reject
-                        </button>
+                      <textarea
+                        name="adminComment"
+                        placeholder="Reason for rejection..."
+                        rows="2"
+                      ></textarea>
 
-                      </form>
+                      <button class="reject">
+                        Reject
+                      </button>
 
-                    </div>
+                    </form>
 
-                  <% } else { %>
+                  </div>
 
-                    -
+                <% } else { %>
 
-                  <% } %>
+                  <div>
+
+                    <span class="status <%= leave.status.toLowerCase() %>">
+                      <%= leave.status %>
+                    </span>
+
+                    <% if (leave.adminComment) { %>
+
+                      <small class="admin-comment">
+                        <%= leave.adminComment %>
+                      </small>
+
+                    <% } %>
+
+                  </div>
+
+                <% } %>
 
                 </td>
 

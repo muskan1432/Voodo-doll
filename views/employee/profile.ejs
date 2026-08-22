@@ -331,6 +331,7 @@
         <form
           action="/employee/profile/update"
           method="POST"
+          enctype="multipart/form-data"
         >
 
           <div class="form-group">
@@ -366,15 +367,18 @@
           <div class="form-group">
 
             <label>
-              Profile Picture URL
+              Profile Picture
             </label>
 
             <input
-              type="url"
+              type="file"
               name="profilePicture"
-              value="<%= employee.profilePicture || '' %>"
-              placeholder="https://example.com/photo.jpg"
+              accept="image/jpeg,image/png,image/webp"
             >
+
+            <small style="color: #6b7280;">
+              JPG, PNG or WebP. Maximum 5 MB.
+            </small>
 
           </div>
 

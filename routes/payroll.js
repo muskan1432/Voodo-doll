@@ -10,9 +10,7 @@ router.get("/", requireLogin, async (req, res) => {
     const salaries = await Salary.find({
       employee: req.session.user.id,
     }).sort({ createdAt: -1 });
-
     const latestSalary = salaries[0] || null;
-
     res.render("employee/payroll", {
       salaries,
       latestSalary,
@@ -23,27 +21,26 @@ router.get("/", requireLogin, async (req, res) => {
   }
 });
 
+
 router.get("/admin", requireAdmin, async (req, res) => {
   try {
     const employees = await User.find({
       role: "employee",
     }).sort({ name: 1 });
-
     const salaries = await Salary.find()
       .populate("employee", "name employeeId department")
       .sort({ createdAt: -1 });
-
     res.render("admin/payroll", {
       employees,
       salaries,
       error: null,
     });
-
   } catch (error) {
     console.error(error);
     res.status(500).send("Server error");
   }
 });
+
 
 router.post("/admin/create", requireAdmin, async (req, res) => {
   try {
@@ -54,14 +51,11 @@ router.post("/admin/create", requireAdmin, async (req, res) => {
       allowances,
       deductions,
     } = req.body;
-
     const basic = Number(basicSalary) || 0;
     const allowanceAmount = Number(allowances) || 0;
     const deductionAmount = Number(deductions) || 0;
-
     const netSalary =
       basic + allowanceAmount - deductionAmount;
-
     await Salary.create({
       employee,
       month,
@@ -71,9 +65,7 @@ router.post("/admin/create", requireAdmin, async (req, res) => {
       netSalary,
       status: "Processed",
     });
-
     res.redirect("/payroll/admin");
-
   } catch (error) {
     console.error(error);
     res.status(500).send("Unable to create payroll");

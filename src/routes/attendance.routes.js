@@ -6,32 +6,31 @@ const router = express.Router();
 router.use(verifyToken);
 
 function startOfToday() {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d;
+  const now = new Date();
+  return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
 }
 
 // POST /api/attendance/checkin - employee checks in for today
 router.post("/checkin", async (req, res) => {
   const today = startOfToday();
 
-  const existing = await prisma.attendance.findUnique({
-    where: { employeeId_date: { employeeId: req.user.employeeId, date: today } },
-  });
-  if (existing) {
-    return res.status(409).json({ error: "Already checked in today" });
+  try {
+    const record = await prisma.attendance.create({
+      data: {
+        employeeId: req.user.employeeId,
+        date: today,
+        checkIn: new Date(),
+        status: "PRESENT",
+      },
+    });
+    res.status(201).json(record);
+  } catch (err) {
+    if (err.code === "P2002") {
+      // Unique constraint on (employeeId, date) - already checked in today
+      return res.status(409).json({ error: "Already checked in today" });
+    }
+    throw err; // anything else goes to the global error handler
   }
-
-  const record = await prisma.attendance.create({
-    data: {
-      employeeId: req.user.employeeId,
-      date: today,
-      checkIn: new Date(),
-      status: "PRESENT",
-    },
-  });
-
-  res.status(201).json(record);
 });
 
 // POST /api/attendance/checkout - employee checks out for today

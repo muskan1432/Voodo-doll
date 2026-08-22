@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  HALF_DAY
+  LEAVE
+}
+
+enum LeaveType {
+  PAID
+  SICK
+  UNPAID
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  employeeCode  String    @unique
+  email         String    @unique
+  passwordHash  String
+  role          Role      @default(EMPLOYEE)
+  emailVerified Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  employee      Employee?
+}
+
+model Employee {
+  id                Int       @id @default(autoincrement())
+  userId            Int       @unique
+  user              User      @relation(fields: [userId], references: [id])
+
+  fullName          String
+  phone             String?
+  address           String?
+  profilePictureUrl String?
+  department        String?
+  designation       String?
+  dateOfJoining     DateTime?
+
+  attendance        Attendance[]
+  leaveRequests     LeaveRequest[]
+  salaryStructures  SalaryStructure[]
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Attendance {
+  id         Int              @id @default(autoincrement())
+  employeeId Int
+  employee   Employee         @relation(fields: [employeeId], references: [id])
+
+  date       DateTime         @db.Date
+  checkIn    DateTime?
+  checkOut   DateTime?
+  status     AttendanceStatus @default(PRESENT)
+
+  createdAt  DateTime         @default(now())
+
+  @@unique([employeeId, date])
+}
+
+model LeaveRequest {
+  id                Int         @id @default(autoincrement())
+  employeeId        Int
+  employee          Employee    @relation(fields: [employeeId], references: [id])
+
+  leaveType         LeaveType
+  startDate         DateTime    @db.Date
+  endDate           DateTime    @db.Date
+  remarks           String?
+
+  status            LeaveStatus @default(PENDING)
+  reviewedByAdminId Int?
+  reviewComments    String?
+
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}
+
+model SalaryStructure {
+  id               Int       @id @default(autoincrement())
+  employeeId       Int
+  employee         Employee  @relation(fields: [employeeId], references: [id])
+
+  basic            Decimal   @db.Decimal(10, 2)
+  hra              Decimal   @db.Decimal(10, 2)
+  allowances       Decimal   @db.Decimal(10, 2) @default(0)
+  deductions       Decimal   @db.Decimal(10, 2) @default(0)
+  netSalary        Decimal   @db.Decimal(10, 2)
+
+  effectiveFrom    DateTime  @db.Date
+  updatedByAdminId Int?
+
+  createdAt        DateTime  @default(now())
+}

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Voodo - Payroll</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+
+    .salary-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .salary-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 22px;
+    }
+
+    .salary-card span {
+      display: block;
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .salary-card strong {
+      font-size: 24px;
+    }
+
+    .net-card {
+      border: 2px solid #2563eb;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 14px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .status {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    @media (max-width: 800px) {
+      .salary-summary {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="brand">Voodo</div>
+
+    <nav>
+
+      <a href="/employee/dashboard">
+        Dashboard
+      </a>
+
+      <a href="/employee/profile">
+        My Profile
+      </a>
+
+      <a href="/employee/attendance">
+        Attendance
+      </a>
+
+      <a href="/employee/leave">
+        Leave
+      </a>
+
+      <a href="/employee/payroll" class="active">
+        Payroll
+      </a>
+
+    </nav>
+
+    <a href="/logout" class="logout">
+      Logout
+    </a>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+
+        <h1>Payroll</h1>
+
+        <p>
+          View your salary and payroll information
+        </p>
+
+      </div>
+
+    </header>
+
+
+    <% if (latestSalary) { %>
+
+      <section class="salary-summary">
+
+        <div class="salary-card">
+
+          <span>Basic Salary</span>
+
+          <strong>
+            ₹<%= latestSalary.basicSalary.toLocaleString("en-IN") %>
+          </strong>
+
+        </div>
+
+
+        <div class="salary-card">
+
+          <span>Allowances</span>
+
+          <strong>
+            ₹<%= latestSalary.allowances.toLocaleString("en-IN") %>
+          </strong>
+
+        </div>
+
+
+        <div class="salary-card">
+
+          <span>Deductions</span>
+
+          <strong>
+            ₹<%= latestSalary.deductions.toLocaleString("en-IN") %>
+          </strong>
+
+        </div>
+
+      </section>
+
+
+      <div class="salary-card net-card" style="margin-bottom: 20px;">
+
+        <span>Net Salary</span>
+
+        <strong>
+          ₹<%= latestSalary.netSalary.toLocaleString("en-IN") %>
+        </strong>
+
+        <p style="margin-top: 8px; color: #6b7280;">
+          Payroll for <%= latestSalary.month %>
+        </p>
+
+      </div>
+
+    <% } else { %>
+
+      <div class="panel">
+
+        <h2>No payroll records yet</h2>
+
+        <p style="margin-top: 8px; color: #6b7280;">
+          Your payroll information will appear here once it has been processed.
+        </p>
+
+      </div>
+
+    <% } %>
+
+
+    <div class="panel" style="margin-top: 20px;">
+
+      <div class="panel-header">
+
+        <h2>Payroll History</h2>
+
+      </div>
+
+
+      <div class="table-container">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Month</th>
+              <th>Basic</th>
+              <th>Allowances</th>
+              <th>Deductions</th>
+              <th>Net Salary</th>
+              <th>Status</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <% if (salaries.length === 0) { %>
+
+              <tr>
+                <td colspan="6">
+                  No payroll records available.
+                </td>
+              </tr>
+
+            <% } %>
+
+
+            <% salaries.forEach(salary => { %>
+
+              <tr>
+
+                <td>
+                  <%= salary.month %>
+                </td>
+
+                <td>
+                  ₹<%= salary.basicSalary.toLocaleString("en-IN") %>
+                </td>
+
+                <td>
+                  ₹<%= salary.allowances.toLocaleString("en-IN") %>
+                </td>
+
+                <td>
+                  ₹<%= salary.deductions.toLocaleString("en-IN") %>
+                </td>
+
+                <td>
+                  <strong>
+                    ₹<%= salary.netSalary.toLocaleString("en-IN") %>
+                  </strong>
+                </td>
+
+                <td>
+                  <span class="status">
+                    <%= salary.status %>
+                  </span>
+                </td>
+
+              </tr>
+
+            <% }) %>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+
+</html>

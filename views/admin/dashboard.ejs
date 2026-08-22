@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Voodo - Admin Dashboard</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    .admin-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .admin-stat {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 22px;
+    }
+
+    .admin-stat span {
+      display: block;
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .admin-stat strong {
+      font-size: 30px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 14px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .view-btn {
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .quick-action {
+      display: block;
+      padding: 18px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      transition: 0.2s;
+    }
+
+    .quick-action:hover {
+      border-color: #2563eb;
+      transform: translateY(-2px);
+    }
+
+    .quick-action .icon {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .quick-action strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .quick-action small {
+      color: #6b7280;
+    }
+
+    .empty-state {
+      color: #6b7280;
+      padding: 20px 0;
+    }
+
+    @media (max-width: 800px) {
+      .admin-stats,
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      Voodo
+    </div>
+
+    <nav>
+
+      <a href="/admin/dashboard" class="active">
+        Dashboard
+      </a>
+
+      <a href="/admin/employees">
+        Employees
+      </a>
+
+      <a href="/admin/attendance">
+        Attendance
+      </a>
+
+      <a href="/payroll/admin">
+        Payroll
+      </a>
+      
+      <a href="/admin/leaves">
+        Leave Requests
+      </a>
+
+      <a href="/admin/admins">
+        Administrators
+      </a>
+
+    </nav>
+
+    <a href="/logout" class="logout">
+      Logout
+    </a>
+
+  </aside>
+
+
+  <!-- MAIN CONTENT -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+        <h1>Admin Dashboard</h1>
+
+        <p>
+          Welcome to Voodo administration
+        </p>
+      </div>
+
+      <div class="user-badge">
+        A
+      </div>
+
+    </header>
+
+
+    <!-- STATISTICS -->
+
+    <section class="admin-stats">
+
+      <div class="admin-stat">
+
+        <span>Total Employees</span>
+
+        <strong>
+          <%= employeeCount %>
+        </strong>
+
+      </div>
+
+
+      <div class="admin-stat">
+
+        <span>Present Today</span>
+
+        <strong>
+          <%= todayAttendance %>
+        </strong>
+
+      </div>
+
+
+      <div class="admin-stat">
+
+        <span>Pending Leave Requests</span>
+
+        <strong>
+          <%= pendingLeaves %>
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <section class="quick-actions">
+
+      <a href="/admin/employees" class="quick-action">
+
+        <div class="icon">👥</div>
+
+        <strong>
+          Manage Employees
+        </strong>
+
+        <small>
+          View and update employee information
+        </small>
+
+      </a>
+
+
+      <a href="/admin/leaves" class="quick-action">
+
+        <div class="icon">📝</div>
+
+        <strong>
+          Leave Requests
+        </strong>
+
+        <small>
+          Review and approve employee leaves
+        </small>
+
+      </a>
+
+
+      <a href="/payroll/admin" class="quick-action">
+
+        <div class="icon">💰</div>
+
+        <strong>
+          Payroll
+        </strong>
+
+        <small>
+          Manage employee salary information
+        </small>
+
+      </a>
+
+    </section>
+
+
+    <!-- RECENT EMPLOYEES -->
+
+    <div class="panel">
+
+      <div class="panel-header">
+
+        <h2>
+          Recent Employees
+        </h2>
+
+      </div>
+
+
+      <div class="table-container">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Employee ID</th>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Job Title</th>
+              <th>Action</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <% if (employees.length === 0) { %>
+
+              <tr>
+
+                <td colspan="5" class="empty-state">
+                  No employees registered yet.
+                </td>
+
+              </tr>
+
+            <% } %>
+
+
+            <% employees.forEach(employee => { %>
+
+              <tr>
+
+                <td>
+                  <%= employee.employeeId %>
+                </td>
+
+                <td>
+                  <strong>
+                    <%= employee.name %>
+                  </strong>
+                </td>
+
+                <td>
+                  <%= employee.department || "Not assigned" %>
+                </td>
+
+                <td>
+                  <%= employee.jobTitle || "Employee" %>
+                </td>
+
+                <td>
+
+                  <a
+                    class="view-btn"
+                    href="/admin/employees/<%= employee._id %>"
+                  >
+                    View
+                  </a>
+
+                </td>
+
+              </tr>
+
+            <% }) %>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+
+</html>

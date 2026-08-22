@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Voodo - Login</title>
+</head>
+
+<body>
+  <h1>Voodo</h1>
+  <h2>Login</h2>
+
+  <% if (error) { %>
+    <p><%= error %></p>
+  <% } %>
+
+  <form action="/login" method="POST">
+    <input
+      type="email"
+      name="email"
+      placeholder="Email"
+      required
+    />
+
+    <input
+      type="password"
+      name="password"
+      placeholder="Password"
+      required
+    />
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p>
+    Don't have an account?
+    <a href="/signup">Create account</a>
+  </p>
+</body>
+</html>

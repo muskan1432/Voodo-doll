@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Voodo - Dashboard</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      Voodo
+    </div>
+
+    <nav>
+
+      <a href="/employee/dashboard" class="active">
+        Dashboard
+      </a>
+
+      <a href="/employee/profile">
+        My Profile
+      </a>
+
+      <a href="/employee/attendance">
+        Attendance
+      </a>
+
+      <a href="/employee/leave">
+        Leave
+      </a>
+
+      <a href="/employee/payroll">
+        Payroll
+      </a>
+
+    </nav>
+
+    <a href="/logout" class="logout">
+      Logout
+    </a>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+        <h1>Dashboard</h1>
+        <p>Welcome back, <%= employee.name %></p>
+      </div>
+
+      <div class="user-badge">
+        <%= employee.name.charAt(0).toUpperCase() %>
+      </div>
+
+    </header>
+
+
+    <section class="stats">
+
+      <div class="card">
+        <span class="card-label">Employee ID</span>
+        <strong><%= employee.employeeId %></strong>
+      </div>
+
+      <div class="card">
+        <span class="card-label">Department</span>
+        <strong><%= employee.department || "Not assigned" %></strong>
+      </div>
+
+      <div class="card">
+        <span class="card-label">Job Title</span>
+        <strong><%= employee.jobTitle || "Employee" %></strong>
+      </div>
+
+      <div class="card">
+        <span class="card-label">Salary</span>
+        <strong>
+          ₹<%= Number(employee.salary || 0).toLocaleString("en-IN") %>
+        </strong>
+      </div>
+
+    </section>
+
+
+    <section class="content-grid">
+
+      <div class="panel">
+
+        <div class="panel-header">
+          <h2>Quick Actions</h2>
+        </div>
+
+        <div class="quick-actions">
+
+          <a href="/employee/attendance" class="action">
+            <span>📅</span>
+            <div>
+              <strong>Attendance</strong>
+              <small>View your attendance</small>
+            </div>
+          </a>
+
+          <a href="/employee/leave" class="action">
+            <span>📝</span>
+            <div>
+              <strong>Apply Leave</strong>
+              <small>Submit a leave request</small>
+            </div>
+          </a>
+
+          <a href="/employee/payroll" class="action">
+            <span>💰</span>
+            <div>
+              <strong>Payroll</strong>
+              <small>View salary details</small>
+            </div>
+          </a>
+
+          <a href="/employee/profile" class="action">
+            <span>👤</span>
+            <div>
+              <strong>My Profile</strong>
+              <small>View your information</small>
+            </div>
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-header">
+          <h2>Employee Information</h2>
+        </div>
+
+        <div class="info-list">
+
+          <div>
+            <span>Name</span>
+            <strong><%= employee.name %></strong>
+          </div>
+
+          <div>
+            <span>Email</span>
+            <strong><%= employee.email %></strong>
+          </div>
+
+          <div>
+            <span>Phone</span>
+            <strong><%= employee.phone || "Not provided" %></strong>
+          </div>
+
+          <div>
+            <span>Joining Date</span>
+            <strong>
+              <%= new Date(employee.joiningDate).toLocaleDateString("en-IN") %>
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+</body>
+</html>

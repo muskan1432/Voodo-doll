@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Voodo - Employees</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 14px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .view-btn {
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    .empty-state {
+      color: #6b7280;
+      padding: 20px;
+    }
+
+    .employee-count {
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      Voodo
+    </div>
+
+    <nav>
+
+      <a href="/admin/dashboard">
+        Dashboard
+      </a>
+
+      <a href="/admin/employees" class="active">
+        Employees
+      </a>
+
+      <a href="/admin/leaves">
+        Leave Requests
+      </a>
+
+    </nav>
+
+    <a href="/logout" class="logout">
+      Logout
+    </a>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+
+        <h1>Employees</h1>
+
+        <p>
+          Manage employee information
+        </p>
+
+      </div>
+
+    </header>
+
+
+    <div class="panel">
+
+      <div class="panel-header">
+
+        <h2>Employee Directory</h2>
+
+        <p class="employee-count">
+          <%= employees.length %> employee(s)
+        </p>
+
+      </div>
+
+
+      <div class="table-container">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Employee ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Job Title</th>
+              <th>Action</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <% if (employees.length === 0) { %>
+
+              <tr>
+
+                <td colspan="6" class="empty-state">
+                  No employees registered yet.
+                </td>
+
+              </tr>
+
+            <% } %>
+
+
+            <% employees.forEach(employee => { %>
+
+              <tr>
+
+                <td>
+                  <%= employee.employeeId %>
+                </td>
+
+                <td>
+                  <strong>
+                    <%= employee.name %>
+                  </strong>
+                </td>
+
+                <td>
+                  <%= employee.email %>
+                </td>
+
+                <td>
+                  <%= employee.department || "Not assigned" %>
+                </td>
+
+                <td>
+                  <%= employee.jobTitle || "Employee" %>
+                </td>
+
+                <td>
+
+                  <a
+                    class="view-btn"
+                    href="/admin/employees/<%= employee._id %>"
+                  >
+                    Manage
+                  </a>
+
+                </td>
+
+              </tr>
+
+            <% }) %>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+
+</html>

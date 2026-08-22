@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Voodo - Attendance</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    .attendance-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      border: none;
+      padding: 11px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 14px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .present {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .absent {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="brand">Voodo</div>
+
+    <nav>
+      <a href="/employee/dashboard">Dashboard</a>
+      <a href="/employee/profile">My Profile</a>
+      <a href="/employee/attendance" class="active">Attendance</a>
+      <a href="/employee/leave">Leave</a>
+      <a href="/employee/payroll">Payroll</a>
+    </nav>
+
+    <a href="/logout" class="logout">Logout</a>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+        <h1>Attendance</h1>
+        <p>Track your daily attendance</p>
+      </div>
+
+    </header>
+
+
+    <div class="panel">
+
+      <h2>Today's Attendance</h2>
+
+      <div class="attendance-actions">
+
+        <form action="/employee/attendance/check-in" method="POST">
+
+          <button
+            class="btn btn-primary"
+            type="submit"
+            <%= todayRecord && todayRecord.checkIn ? "disabled" : "" %>
+          >
+            Check In
+          </button>
+
+        </form>
+
+
+        <form action="/employee/attendance/check-out" method="POST">
+
+          <button
+            class="btn btn-secondary"
+            type="submit"
+            <%= !todayRecord || !todayRecord.checkIn || todayRecord.checkOut ? "disabled" : "" %>
+          >
+            Check Out
+          </button>
+
+        </form>
+
+      </div>
+
+      <% if (todayRecord) { %>
+
+        <div style="margin-top: 20px;">
+
+          <p>
+            Check-in:
+            <strong>
+              <%= todayRecord.checkIn
+                ? new Date(todayRecord.checkIn).toLocaleTimeString()
+                : "Not yet"
+              %>
+            </strong>
+          </p>
+
+          <p>
+            Check-out:
+            <strong>
+              <%= todayRecord.checkOut
+                ? new Date(todayRecord.checkOut).toLocaleTimeString()
+                : "Not yet"
+              %>
+            </strong>
+          </p>
+
+        </div>
+
+      <% } %>
+
+    </div>
+
+
+    <div class="panel" style="margin-top: 20px;">
+
+      <div class="panel-header">
+        <h2>Attendance History</h2>
+      </div>
+
+      <div class="table-container">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Date</th>
+              <th>Check In</th>
+              <th>Check Out</th>
+              <th>Status</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <% if (records.length === 0) { %>
+
+              <tr>
+                <td colspan="4">No attendance records yet.</td>
+              </tr>
+
+            <% } %>
+
+
+            <% records.forEach(record => { %>
+
+              <tr>
+
+                <td>
+                  <%= new Date(record.date).toLocaleDateString("en-IN") %>
+                </td>
+
+                <td>
+                  <%= record.checkIn
+                    ? new Date(record.checkIn).toLocaleTimeString()
+                    : "-"
+                  %>
+                </td>
+
+                <td>
+                  <%= record.checkOut
+                    ? new Date(record.checkOut).toLocaleTimeString()
+                    : "-"
+                  %>
+                </td>
+
+                <td>
+
+                  <span class="status <%= record.status === 'Present' ? 'present' : 'absent' %>">
+                    <%= record.status %>
+                  </span>
+
+                </td>
+
+              </tr>
+
+            <% }) %>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>

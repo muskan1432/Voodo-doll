@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Voodo - Leave</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 14px;
+      color: #4b5563;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea {
+      padding: 11px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .submit-btn {
+      margin-top: 18px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 11px 20px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 12px;
+      border-radius: 7px;
+      margin-bottom: 18px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .approved {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 14px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      color: #6b7280;
+      font-size: 13px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="brand">Voodo</div>
+
+    <nav>
+
+      <a href="/employee/dashboard">
+        Dashboard
+      </a>
+
+      <a href="/employee/profile">
+        My Profile
+      </a>
+
+      <a href="/employee/attendance">
+        Attendance
+      </a>
+
+      <a href="/employee/leave" class="active">
+        Leave
+      </a>
+
+      <a href="/employee/payroll">
+        Payroll
+      </a>
+
+    </nav>
+
+    <a href="/logout" class="logout">
+      Logout
+    </a>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+        <h1>Leave Management</h1>
+        <p>Apply for leave and track your requests</p>
+      </div>
+
+    </header>
+
+
+    <div class="panel">
+
+      <div class="panel-header">
+        <h2>Apply for Leave</h2>
+      </div>
+
+
+      <% if (error) { %>
+
+        <div class="error">
+          <%= error %>
+        </div>
+
+      <% } %>
+
+
+      <form action="/employee/leave/apply" method="POST">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>Leave Type</label>
+
+            <select name="type" required>
+
+              <option value="">Select leave type</option>
+              <option value="Casual">Casual Leave</option>
+              <option value="Sick">Sick Leave</option>
+              <option value="Paid">Paid Leave</option>
+              <option value="Unpaid">Unpaid Leave</option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+            <label>Start Date</label>
+
+            <input
+              type="date"
+              name="startDate"
+              required
+            >
+          </div>
+
+
+          <div class="form-group">
+
+            <label>End Date</label>
+
+            <input
+              type="date"
+              name="endDate"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group full">
+
+            <label>Reason</label>
+
+            <textarea
+              name="reason"
+              placeholder="Enter reason for leave..."
+              required
+            ></textarea>
+
+          </div>
+
+        </div>
+
+
+        <button class="submit-btn" type="submit">
+          Submit Leave Request
+        </button>
+
+      </form>
+
+    </div>
+
+
+    <div class="panel" style="margin-top: 20px;">
+
+      <div class="panel-header">
+        <h2>My Leave Requests</h2>
+      </div>
+
+
+      <div class="table-container">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Type</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Reason</th>
+              <th>Status</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <% if (leaves.length === 0) { %>
+
+              <tr>
+                <td colspan="5">
+                  No leave requests yet.
+                </td>
+              </tr>
+
+            <% } %>
+
+
+            <% leaves.forEach(leave => { %>
+
+              <tr>
+
+                <td>
+                  <%= leave.type %>
+                </td>
+
+                <td>
+                  <%= new Date(leave.startDate).toLocaleDateString("en-IN") %>
+                </td>
+
+                <td>
+                  <%= new Date(leave.endDate).toLocaleDateString("en-IN") %>
+                </td>
+
+                <td>
+                  <%= leave.reason %>
+                </td>
+
+                <td>
+
+                  <span class="status <%= leave.status.toLowerCase() %>">
+                    <%= leave.status %>
+                  </span>
+
+                </td>
+
+              </tr>
+
+            <% }) %>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>
